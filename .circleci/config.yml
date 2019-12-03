@@ -35,6 +35,11 @@ jobs:
           destination: tr1
       - store_test_results:
           path: test-reports/
+      - run:
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements/dev.txt
           
   build:
     docker:
