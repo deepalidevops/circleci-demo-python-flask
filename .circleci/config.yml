@@ -10,7 +10,7 @@ jobs:
            command: sudo pip install -U --pre PyBuilder 
        - run:
            name: Unit Tests
-           command: run test:unit
+           command: echo testing
       
           
   build:
@@ -40,6 +40,8 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - test
+      - test:
+          requires:
+            - build
     
       
