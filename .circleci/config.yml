@@ -35,11 +35,7 @@ jobs:
           destination: tr1
       - store_test_results:
           path: test-reports/
-      - run:
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements/dev.txt
+      
           
   build:
     docker:
@@ -48,10 +44,14 @@ jobs:
       - checkout
       - run:
           name: Install Python Dependencies
-          command: pip install --user -r requirements.txt
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements/dev.txt
       - run: 
           name: install pybuilder
           command: sudo pip install -U --pre PyBuilder 
+            
       - run:
            name: Build Application
            command: echo building
