@@ -1,16 +1,8 @@
 version: 2
 jobs:
-  build:
+  test:
     docker:
       - image: circleci/python:3.6.2-stretch-browsers
-        environment:
-          FLASK_CONFIG: testing
-          TEST_DATABASE_URL: postgresql://ubuntu@localhost/circle_test?sslmode=disable
-      - image: circleci/postgres:9.6.5-alpine-ram
-        environment:
-          POSTGRES_USER: ubuntu
-          POSTGRES_DB: circle_test
-          POSTGRES_PASSWORD: ''
     steps:
       - checkout
       - run: mkdir test-reports
@@ -30,9 +22,6 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements/dev.txt
-      - run:
-          name: setup Heroku
-          command: bash .circleci/setup-heroku.sh
       - save_cache:
           key: deps2-{{ .Branch }}-{{ checksum "requirements/dev.txt" }}
           paths:
@@ -46,5 +35,24 @@ jobs:
           destination: tr1
       - store_test_results:
           path: test-reports/
+          
+  build:
+    docker:
+      - image: circleci/python:3.6.2-stretch-browsers
+    steps:
+      - checkout
+      - run:
+          name: Install Python Dependencies
+          command: pip install --user -r requirements.txt
+      - run: 
+          name: install pybuilder
+          command: sudo pip install -U --pre PyBuilder 
+      - run:
+           name: Build Application
+           command: echo building
+      - persist_to_workspace: 
+           root: venv
+           paths: 
+             - ./
     
       
